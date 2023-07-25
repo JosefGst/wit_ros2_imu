@@ -7,6 +7,7 @@ import threading
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
+from time import sleep
 
 key = 0
 flag = 0
@@ -217,6 +218,7 @@ class IMUDriverNode(Node):
 
         # 发布IMU消息
         self.imu_pub.publish(self.imu_msg)
+        sleep(0.004) # add sleep after publish to reduce CPU consumption. Max freq is 200Hz
 
     def compute_orientation(self, wx, wy, wz, ax, ay, az, dt):
         # 计算旋转矩阵
