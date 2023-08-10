@@ -182,21 +182,23 @@ class IMUDriverNode(Node):
 
     def imu_data(self):
         accel_x, accel_y, accel_z = acceleration[0], acceleration[1], acceleration[2]  # struct.unpack('hhh', accel_raw)
-        accel_scale = 16 / 32768.0
-        accel_x, accel_y, accel_z = accel_x * accel_scale, accel_y * accel_scale, accel_z * accel_scale
+        # accel_scale = 16 / 32768.0 #! REDUNDANT
+        # accel_x, accel_y, accel_z = accel_x * accel_scale, accel_y * accel_scale, accel_z * accel_scale
 
         # 读取陀螺仪数据
         gyro_x, gyro_y, gyro_z = angularVelocity[0], angularVelocity[1], angularVelocity[
             2]  # struct.unpack('hhh', gyro_raw)
-        gyro_scale = 2000 / 32768.0
-        gyro_x, gyro_y, gyro_z = math.radians(gyro_x * gyro_scale), math.radians(gyro_y * gyro_scale), math.radians(
-            gyro_z * gyro_scale)
+        # gyro_scale = 2000 / 32768.0 #! REDUNDANT
+        # gyro_x, gyro_y, gyro_z = math.radians(gyro_x * gyro_scale), math.radians(gyro_y * gyro_scale), math.radians(
+        #     gyro_z * gyro_scale)
+        gyro_x, gyro_y, gyro_z = math.radians(gyro_x), math.radians(gyro_y), math.radians(gyro_z)
+        
 
         # 计算角速度
-        dt = 0.01
-        wx, wy, wz = gyro_x, gyro_y, gyro_z
-        ax, ay, az = accel_x, accel_y, accel_z
-        roll, pitch, yaw = self.compute_orientation(wx, wy, wz, ax, ay, az, dt)
+        # dt = 0.01
+        # wx, wy, wz = gyro_x, gyro_y, gyro_z
+        # ax, ay, az = accel_x, accel_y, accel_z
+        # roll, pitch, yaw = self.compute_orientation(wx, wy, wz, ax, ay, az, dt)
 
         # 更新IMU消息
         self.imu_msg.header.stamp = self.get_clock().now().to_msg()
@@ -207,7 +209,8 @@ class IMUDriverNode(Node):
         self.imu_msg.angular_velocity.y = gyro_y
         self.imu_msg.angular_velocity.z = gyro_z
 
-        angle_radian = [angle_degree[i] * math.pi / 180 for i in range(3)]
+        deg2rad = 0.0174533
+        angle_radian = [angle_degree[i] * deg2rad for i in range(3)]
 
         qua = get_quaternion_from_euler(angle_radian[0], angle_radian[1], angle_radian[2])
 
