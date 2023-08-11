@@ -49,7 +49,7 @@ def handle_serial_data(raw_data):
 
         elif buff[1] == 0x52:
             if check_sum(data_buff[0:10], data_buff[10]):
-                angularVelocity = [hex_to_short(data_buff[2:10])[i] / 32768.0 * 2000 * math.pi / 180 for i in
+                angularVelocity = [hex_to_short(data_buff[2:10])[i] / 32768.0 * 2000 for i in
                                    range(0, 3)]
 
             else:
@@ -221,7 +221,7 @@ class IMUDriverNode(Node):
 
         # 发布IMU消息
         self.imu_pub.publish(self.imu_msg)
-        sleep(0.009) # add sleep after publish to reduce CPU consumption. Max freq is 100Hz
+        sleep(0.09) # add sleep after publish to reduce CPU consumption. Max freq is 10Hz
 
     def compute_orientation(self, wx, wy, wz, ax, ay, az, dt):
         # 计算旋转矩阵
