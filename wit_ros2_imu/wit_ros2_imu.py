@@ -221,7 +221,7 @@ class IMUDriverNode(Node):
 
         # 发布IMU消息
         self.imu_pub.publish(self.imu_msg)
-        sleep(0.09) # add sleep after publish to reduce CPU consumption. Max freq is 10Hz
+        sleep(0.04) # add sleep after publish to reduce CPU consumption. Max freq is 20Hz
 
     def compute_orientation(self, wx, wy, wz, ax, ay, az, dt):
         # 计算旋转矩阵
